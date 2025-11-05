@@ -27,16 +27,19 @@ const CategoryBar = ({ onSelectCategory }) => {
 
 const styles = {
   container: {
-    position: "absolute",
-    bottom: 15,
+    position: "fixed",
+    bottom: "15px",
     left: "50%",
     transform: "translateX(-50%)",
     display: "flex",
     justifyContent: "center",
     background: "rgba(255,255,255,0.95)",
-    borderRadius: 30,
-    padding: "6px 10px",
+    borderRadius: "30px",
+    padding: "8px 12px",
     boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
+    zIndex: 1000,
+    maxWidth: "calc(100vw - 30px)",
+    flexWrap: "nowrap",
   },
   button: {
     display: "flex",
@@ -44,13 +47,17 @@ const styles = {
     alignItems: "center",
     background: "none",
     border: "none",
-    margin: "0 8px",
+    margin: "0 6px",
+    padding: "4px",
     cursor: "pointer",
-    fontSize: 12,
+    fontSize: "12px",
+    minWidth: "50px",
+    flexShrink: 0,
   },
   label: {
-    fontSize: 11,
-    marginTop: 2,
+    fontSize: "10px",
+    marginTop: "2px",
+    whiteSpace: "nowrap",
   },
 };
 
