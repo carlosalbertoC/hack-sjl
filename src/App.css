@@ -1,0 +1,14 @@
+* { box-sizing: border-box; }
+html,body,#root { height: 100%; margin: 0; font-family: Arial, sans-serif; }
+.app-shell { display: flex; height: 100vh; }
+.side-nav { width: 220px; padding: 16px; background: #fafafa; border-right: 1px solid #eee; }
+.side-nav h2 { margin-top: 0; }
+.side-nav ul { list-style: none; padding: 0; }
+.side-nav a { text-decoration: none; color: #333; display: block; padding: 6px 0; }
+.main-content { flex: 1; display: flex; flex-direction: column; }
+.map-area { flex: 1; height: calc(100vh - 60px); position: relative; }
+.report-button { position: absolute; right: 16px; bottom: 16px; z-index: 999; background:#e53935;color:white;border:none;padding:12px 16px;border-radius:8px;cursor:pointer; }
+.modal { position: fixed; left:0; right:0; top:0; bottom:0; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; z-index:1000; }
+.modal .card { background:white; padding:16px; border-radius:8px; width: 90%; max-width:420px; }
+.sidebar-filters { width: 320px; padding: 12px; border-left: 1px solid #eee; }
+.small { font-size: 0.9rem; color: #666; }
