@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import MapView from "../components/MapView";
 import CategoryBar from "../components/CategoryBar";
 import ReportModal from "../components/ReportModal";
-import FloatingLoginButton from "../components/FloatingLoginButton";
 import FloatingReportButton from "../components/FloatingReportButton";
 import LoadingScreen from "../components/LoadingScreen";
-import { createReport, fetchReports } from "../services/api";
+import { createReport } from "../services/api";
 import useReports from "../hooks/useReports";
 
 const HomePage = () => {
@@ -81,7 +80,6 @@ const HomePage = () => {
         onMapClick={handleMapClick}
       />
     
-      <FloatingLoginButton />
       <FloatingReportButton onOpenReport={handleOpenReportFromButton} />
 
       <CategoryBar onSelectCategory={setSelectedCategory} />
@@ -102,3 +100,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+

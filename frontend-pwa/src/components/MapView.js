@@ -7,12 +7,12 @@ const containerStyle = { width: "100vw", height: "100vh" };
 const DEFAULT_CENTER = { lat: -12.0553, lng: -76.9468 };
 
 const MapView = ({
-  markers = [],              // reportes ya enviados
-  currentCategory = null,    // categoría seleccionada en la barra
-  onMapClick = () => {},     // callback al padre con {lat, lng}
+  markers = [],
+  currentCategory = null,
+  onMapClick = () => {},
 }) => {
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [clickMarker, setClickMarker] = useState(null); // marker temporal
+  const [clickMarker, setClickMarker] = useState(null);
   const mapRef = useRef(null);
 
   const getCustomIcon = (categoryId) => {
@@ -33,19 +33,16 @@ const MapView = ({
   const handleMapClickInternal = (e) => {
     const pos = { lat: e.latLng.lat(), lng: e.latLng.lng() };
 
-    // marker temporal con icono de la categoría seleccionada
     setClickMarker({
       id: "click-marker",
       position: pos,
       category: currentCategory,
     });
 
-    // mover el mapa al punto clickeado
     if (mapRef.current) {
       mapRef.current.panTo(pos);
     }
 
-    // avisar al padre con la posición limpia
     onMapClick(pos);
   };
 
@@ -62,7 +59,6 @@ const MapView = ({
         onClick={handleMapClickInternal}
         onLoad={handleOnLoad}
       >
-        {/* markers de reportes (persistentes) */}
         {markers.map((m) => {
           const position = m.position || { lat: m.lat, lng: m.lng };
           return (
@@ -75,7 +71,6 @@ const MapView = ({
           );
         })}
 
-        {/* marker temporal del último click */}
         {clickMarker && (
           <Marker
             key={clickMarker.id}
@@ -115,3 +110,4 @@ const MapView = ({
 };
 
 export default MapView;
+

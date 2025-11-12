@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PulseMonitor from "../components/dashboard/PulseMonitor";
 import TacticalPlanner from "../components/dashboard/TacticalPlanner";
@@ -14,14 +14,29 @@ const DashboardPage = () => {
   const navigate = useNavigate();
   const [activeModule, setActiveModule] = useState('pulse');
 
+  useEffect(() => {
+    // Verificar autenticación
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    navigate("/login");
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <button onClick={() => navigate("/")} style={styles.backBtn}>
-          ← Volver al Mapa
+        <div>
+          <h1 style={styles.title}>Dashboard de Mando Centralizado</h1>
+          <p style={styles.subtitle}>Inteligencia Táctica y Estratégica para SJL</p>
+        </div>
+        <button onClick={handleLogout} style={styles.logoutBtn}>
+          Cerrar Sesión
         </button>
-        <h1 style={styles.title}>Dashboard de Mando Centralizado</h1>
-        <p style={styles.subtitle}>Inteligencia Táctica y Estratégica para SJL</p>
       </div>
 
       <div style={styles.navTabs}>
@@ -60,15 +75,17 @@ const styles = {
     color: "white",
     padding: "20px 30px",
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  backBtn: {
+  logoutBtn: {
     border: "none",
     background: "rgba(255,255,255,0.2)",
     color: "white",
     padding: "8px 16px",
     borderRadius: 8,
     cursor: "pointer",
-    marginBottom: 10,
     fontSize: 14,
   },
   title: {
@@ -118,3 +135,4 @@ const styles = {
 };
 
 export default DashboardPage;
+

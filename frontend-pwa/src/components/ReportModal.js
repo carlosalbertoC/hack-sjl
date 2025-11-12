@@ -6,7 +6,6 @@ const ReportModal = ({ selectedCategory, position, onSubmit, onCancel }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // activar animación al montar
     const timeout = setTimeout(() => setVisible(true), 10);
     return () => clearTimeout(timeout);
   }, []);
@@ -101,7 +100,7 @@ const styles = {
     boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
     textAlign: "center",
     opacity: 0,
-    transition: "all 0.25s ease", // 👈 fade + scale suave
+    transition: "all 0.25s ease",
   },
   title: {
     marginBottom: 10,
@@ -171,3 +170,4 @@ const styles = {
 };
 
 export default ReportModal;
+

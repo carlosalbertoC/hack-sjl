@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Backend API
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./reports.db
+      - SECRET_KEY=dev_secret_key_change_in_production
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # PWA Frontend (Vecinos)
+  frontend-pwa:
+    build:
+      context: ./frontend-pwa
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - REACT_APP_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend-pwa:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  # Dashboard Frontend (Municipalidad)
+  frontend-dashboard:
+    build:
+      context: ./frontend-dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    environment:
+      - REACT_APP_GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
+      - REACT_APP_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend-dashboard:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+

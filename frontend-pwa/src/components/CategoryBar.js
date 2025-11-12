@@ -61,3 +61,4 @@ const styles = {
 };
 
 export default CategoryBar;
+
