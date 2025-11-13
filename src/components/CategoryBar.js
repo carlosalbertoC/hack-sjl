@@ -8,19 +8,29 @@ const categories = [
   { id: "sospechoso", label: "Sospechoso", color: "#1565c0", icon: <FaUserSecret size={20} /> },
 ];
 
-const CategoryBar = ({ onSelectCategory }) => {
+const CategoryBar = ({ onSelectCategory, selectedCategory }) => {
   return (
     <div style={styles.container}>
-      {categories.map((cat) => (
-        <button
-          key={cat.id}
-          onClick={() => onSelectCategory(cat.id)}
-          style={{ ...styles.button, color: cat.color }}
-        >
-          {cat.icon}
-          <span style={styles.label}>{cat.label}</span>
-        </button>
-      ))}
+      {categories.map((cat) => {
+        const isSelected = selectedCategory === cat.id;
+
+        return (
+          <button
+            key={cat.id}
+            onClick={() => onSelectCategory(cat.id)}
+            style={{
+              ...styles.button,
+              color: cat.color,
+              backgroundColor: isSelected ? cat.color + "20" : "transparent",
+              border: isSelected ? `2px solid ${cat.color}` : "2px solid transparent",
+              transform: isSelected ? "scale(1.1)" : "scale(1)",
+            }}
+          >
+            {cat.icon}
+            <span style={styles.label}>{cat.label}</span>
+          </button>
+        );
+      })}
     </div>
   );
 };
@@ -46,13 +56,15 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     background: "none",
-    border: "none",
+    border: "2px solid transparent",
     margin: "0 6px",
-    padding: "4px",
+    padding: "6px",
     cursor: "pointer",
     fontSize: "12px",
     minWidth: "50px",
+    borderRadius: "12px",
     flexShrink: 0,
+    transition: "all 0.18s ease",
   },
   label: {
     fontSize: "10px",
