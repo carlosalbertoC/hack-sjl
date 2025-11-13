@@ -1,0 +1,120 @@
+.sidebar {
+  width: 264px;
+  height: 100vh;
+  background: linear-gradient(180deg, rgba(17, 23, 44, 0.92) 0%, rgba(11, 16, 31, 0.94) 100%);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  inset: 0 auto 0 0;
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+}
+
+.logo {
+  padding: 32px 28px 24px;
+  border-bottom: 1px solid rgba(120, 130, 170, 0.15);
+}
+
+.logo h2 {
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+.logo h2 span {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  color: var(--color-text-muted);
+}
+
+.nav {
+  flex: 1;
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  border-radius: var(--radius-sm);
+  position: relative;
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  inset: 6px 8px;
+  border-radius: calc(var(--radius-sm) - 6px);
+  border: 1px solid transparent;
+  transition: border-color 0.25s ease;
+}
+
+.navLink:hover {
+  color: var(--color-text);
+  background: rgba(91, 124, 255, 0.08);
+}
+
+.navLink:hover::after {
+  border-color: rgba(91, 124, 255, 0.35);
+}
+
+.navLink.active {
+  color: var(--color-text);
+  background: linear-gradient(120deg, rgba(91, 124, 255, 0.18), rgba(17, 23, 44, 0.2));
+  box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.3);
+}
+
+.navLink.active::after {
+  border-color: rgba(91, 124, 255, 0.45);
+}
+
+.icon {
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+}
+
+.footer {
+  padding: 18px 18px 28px;
+  border-top: 1px solid rgba(120, 130, 170, 0.12);
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 18px;
+  color: #ff8797;
+  background: rgba(255, 107, 129, 0.12);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: all 0.25s ease;
+  box-shadow: inset 0 0 0 1px rgba(255, 107, 129, 0.22);
+}
+
+.logoutButton:hover {
+  background: rgba(255, 107, 129, 0.2);
+  color: #ffc0ca;
+  transform: translateY(-1px);
+}
+

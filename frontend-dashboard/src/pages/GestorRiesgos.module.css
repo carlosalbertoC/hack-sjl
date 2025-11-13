@@ -1,0 +1,166 @@
+.container {
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header h1 {
+  color: var(--color-text);
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  letter-spacing: 0.4px;
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: linear-gradient(160deg, rgba(15, 20, 38, 0.9), rgba(5, 6, 15, 0.95));
+  box-shadow: var(--shadow-soft);
+  padding: 4px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--color-text);
+}
+
+.table thead {
+  background: rgba(21, 26, 46, 0.95);
+}
+
+.table th {
+  padding: 18px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid rgba(120, 130, 170, 0.18);
+}
+
+.table td {
+  padding: 18px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(120, 130, 170, 0.12);
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(91, 124, 255, 0.08);
+}
+
+.prioridad {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.prioridadAlta {
+  background: rgba(255, 107, 129, 0.18);
+  color: #ff9aa9;
+  border: 1px solid rgba(255, 107, 129, 0.45);
+}
+
+.prioridadMedia {
+  background: rgba(255, 196, 107, 0.18);
+  color: #ffd79a;
+  border: 1px solid rgba(255, 196, 107, 0.4);
+}
+
+.prioridadBaja {
+  background: rgba(91, 124, 255, 0.18);
+  color: #9fb2ff;
+  border: 1px solid rgba(91, 124, 255, 0.4);
+}
+
+.delitos {
+  color: var(--color-warning);
+  font-weight: 600;
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.estadoPendiente {
+  background: rgba(255, 107, 129, 0.15);
+  color: #ff9aa9;
+}
+
+.estadoProceso {
+  background: rgba(255, 196, 107, 0.15);
+  color: #ffd79a;
+}
+
+.estadoResuelto {
+  background: rgba(76, 224, 179, 0.18);
+  color: #98f3d5;
+}
+
+.buttonAsignar {
+  background: transparent;
+  border: 1px solid rgba(91, 124, 255, 0.35);
+  border-radius: 999px;
+  padding: 8px 18px;
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.buttonAsignar:hover {
+  background: rgba(91, 124, 255, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(91, 124, 255, 0.22);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 160px);
+  color: var(--color-text-muted);
+  font-size: 18px;
+}
+
+@media (max-width: 1200px) {
+  .table {
+    min-width: 980px;
+  }
+}
+
