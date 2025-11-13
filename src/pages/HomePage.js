@@ -12,6 +12,11 @@ const HomePage = () => {
   const [reports, setReports] = useState([]); // reportes ya enviados (se muestran como markers)
   const [loading, setLoading] = useState(true);
 
+  const handleMarkerClickEvent = (marker) => {
+    console.log("IMPRIMIR EVENTO:", marker);
+    // acá haces lo que quieras: abrir modal, enviar a consola, etc.
+  };
+
   // el mapa me manda directamente {lat, lng}
   const handleMapClick = (pos) => {
     // si quieres que solo se abra modal cuando hay categoría
@@ -48,12 +53,16 @@ const HomePage = () => {
         markers={reports}
         currentCategory={selectedCategory}
         onMapClick={handleMapClick}
-      />
+        onMarkerClickEvent={handleMarkerClickEvent}
+      />;
     
       <FloatingLoginButton />
       <FloatingReportButton onOpenReport={handleOpenReportFromButton} />
 
-      <CategoryBar onSelectCategory={setSelectedCategory} />
+      <CategoryBar
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+      />
 
       {position && selectedCategory && (
         <ReportModal
