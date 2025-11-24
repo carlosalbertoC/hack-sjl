@@ -1,74 +1,137 @@
-const STORAGE_KEY = 'hack_sjl_reports_v1';
+import { getCategory } from "../constants/categories";
 
-function loadAll() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  const arr = raw ? JSON.parse(raw) : [];
-  const now = Date.now();
-  const filtered = arr.filter(r => new Date(r.expires_at).getTime() > now);
-  if (filtered.length !== arr.length) localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-  return filtered;
+const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.warn(
+    "⚠️ Faltan REACT_APP_SUPABASE_URL o REACT_APP_SUPABASE_ANON_KEY en el .env"
+  );
 }
 
-function saveAll(arr) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
-}
+const defaultHeaders = {
+  apikey: SUPABASE_ANON_KEY,
+  Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+};
 
-function uid() {
-  return 'r_' + Math.random().toString(36).slice(2, 9);
-}
-
-export async function fetchReports({ sinceISO, lat, lng, radius_m } = {}) {
-  await new Promise(res => setTimeout(res, 200));
-  let arr = loadAll();
-  if (sinceISO) arr = arr.filter(r => new Date(r.created_at) >= new Date(sinceISO));
-  if (lat && lng && radius_m) {
-    const R = 6371000;
-    const toRad = v => v * Math.PI / 180;
-    arr = arr.filter(r => {
-      const dLat = toRad(r.lat - lat);
-      const dLon = toRad(r.lng - lng);
-      const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat))*Math.cos(toRad(r.lat))*Math.sin(dLon/2)**2;
-      const d = 2*R*Math.asin(Math.sqrt(a));
-      return d <= radius_m;
-    });
+/**
+ * Obtener reportes desde Supabase.
+ * timeWindow: "24h" | "48h" | "7d"
+ */
+export async function fetchReports({ timeWindow = "48h" } = {}) {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error("Supabase no está configurado (URL o ANON KEY faltan)");
   }
-  arr.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
-  return arr;
-}
 
-export async function createReport({ lat, lng, category, comment, imagesUrls=[] }) {
-  await new Promise(res => setTimeout(res, 200));
+  const url = new URL(`${SUPABASE_URL}/rest/v1/reports`);
+  // Campos que queremos leer
+  url.searchParams.set("select", "id,lat,lng,category,comment,created_at,time_status,status");
+
+  // --- filtro de ventana de tiempo ---
   const now = new Date();
-  const expires = new Date(now.getTime() + 48*3600*1000);
-  const r = {
-    id: uid(),
-    lat: Number(lat),
-    lng: Number(lng),
-    category,
-    comment: comment || '',
-    images: imagesUrls,
-    created_at: now.toISOString(),
-    expires_at: expires.toISOString(),
-    status: 'pendiente',
-    municipality_note: null
-  };
-  const arr = loadAll();
-  arr.push(r);
-  saveAll(arr);
-  return r;
+  let fromDate = null;
+
+  if (timeWindow === "24h") {
+    fromDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  } else if (timeWindow === "48h") {
+    fromDate = new Date(now.getTime() - 48 * 60 * 60 * 1000);
+  } else if (timeWindow === "7d") {
+    fromDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  }
+
+  if (fromDate) {
+    url.searchParams.set("created_at", `gte.${fromDate.toISOString()}`);
+  }
+
+  // Ordenar por fecha de creación descendente
+  url.searchParams.set("order", "created_at.desc");
+
+  const res = await fetch(url.toString(), {
+    headers: {
+      ...defaultHeaders,
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Error al obtener reports de Supabase:", text);
+    throw new Error("Error al obtener reportes");
+  }
+
+  const data = await res.json();
+  return data;
 }
 
-export async function getReport(id) {
-  const arr = loadAll();
-  return arr.find(r => r.id === id) || null;
-}
+/**
+ * Crear un nuevo reporte en Supabase.
+ * Espera un objeto:
+ * {
+ *   position: { lat, lng },
+ *   category: string,    // ej. "robo_asalto"
+ *   comment: string,
+ *   time_status: "actual" | "reciente" | "pasado"  (según como lo manejes)
+ * }
+ */
+export async function createReport({
+  position,
+  category,
+  comment,
+  time_status,
+}) {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error("Supabase no está configurado (URL o ANON KEY faltan)");
+  }
 
-export async function attendReport(id, note) {
-  const arr = loadAll();
-  const idx = arr.findIndex(r => r.id === id);
-  if (idx === -1) throw new Error('No encontrado');
-  arr[idx].status = 'atendido';
-  arr[idx].municipality_note = note || '';
-  saveAll(arr);
-  return arr[idx];
+  if (
+    !position ||
+    typeof position.lat !== "number" ||
+    typeof position.lng !== "number"
+  ) {
+    throw new Error("Posición inválida");
+  }
+
+  const url = `${SUPABASE_URL}/rest/v1/reports`;
+
+  const catMeta = getCategory(category);
+  const type_general = catMeta?.group || "conducta_sospechosa"; 
+  // 'delito' | 'conducta_sospechosa' | 'riesgo_entorno'
+
+  // Normalizamos time_status para que cumpla con el CHECK de la BD
+  const validTimeStatus = ["en_curso", "menos_1h", "hoy", "dias_anteriores"];
+  const safeTimeStatus = validTimeStatus.includes(time_status)
+    ? time_status
+    : "dias_anteriores";
+
+  const payload = [
+    {
+      lat: position.lat,
+      lng: position.lng,
+      category,
+      comment: comment || "",
+      time_status: safeTimeStatus,
+      type_general, // OBLIGATORIO por NOT NULL
+      // urgency: 2,           // puedes omitirlo y usar el DEFAULT de la tabla
+      // address: null,        // opcional para futuro
+      // status: "activo",     // puedes omitirlo y usar el DEFAULT
+    },
+  ];
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+      "Content-Type": "application/json",
+      Prefer: "return=representation", // que devuelva el registro insertado
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Error al crear report en Supabase:", text);
+    throw new Error("Error al crear reporte");
+  }
+
+  const data = await res.json();
+  return data[0]; // devolvemos el registro recién creado
 }

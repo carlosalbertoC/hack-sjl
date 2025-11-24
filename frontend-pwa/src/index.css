@@ -7,3 +7,32 @@ body {
 button, textarea {
   font-family: inherit;
 }
+
+.topbar-logo-wrapper img {
+  display: block;
+}
+
+.topbar-logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.topbar-logo-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .topbar-logo-wrapper {
+    display: none;
+  }
+
+  .topbar-logo-mobile {
+    display: flex;
+    align-items: center;
+  }
+
+  .topbar-logo-mobile img {
+    height: 28px;
+    width: auto;
+  }
+}

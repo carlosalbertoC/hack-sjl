@@ -1,26 +1,46 @@
-import { useEffect, useState, useRef } from 'react';
-import { fetchReports } from '../services/api';
+// src/hooks/useReports.js
+import { useState, useEffect, useCallback } from "react";
+import { fetchReports } from "../services/api";
 
-export default function useReports({ intervalMs = 30000, radius_m, lat, lng } = {}) {
+/**
+ * Hook para cargar reportes desde Supabase.
+ * - intervalMs: cada cuánto refrescar (ms)
+ * - timeWindow: "24h" | "48h" | "7d"
+ */
+const useReports = ({ intervalMs = 30000, timeWindow = "48h" } = {}) => {
   const [reports, setReports] = useState([]);
-  const timerRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const load = async () => {
-    const since = new Date(Date.now() - 48*3600*1000).toISOString();
+  const refresh = useCallback(async () => {
     try {
-      const res = await fetchReports({ sinceISO: since, lat, lng, radius_m });
-      setReports(res);
-    } catch (e) {
-      console.error('fetch reports error', e);
+      setLoading(true);
+      const data = await fetchReports({ timeWindow });
+      setReports(data);
+      setError(null);
+    } catch (err) {
+      console.error("Error en useReports.refresh:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [timeWindow]);
 
+  // cargar al montar y cuando cambie timeWindow
   useEffect(() => {
-    load();
-    timerRef.current = setInterval(load, intervalMs);
-    return () => clearInterval(timerRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [intervalMs, radius_m, lat, lng]);
+    refresh();
+  }, [refresh]);
 
-  return { reports, refresh: load };
-}
+  // refresco periódico
+  useEffect(() => {
+    if (!intervalMs) return;
+    const id = setInterval(() => {
+      refresh();
+    }, intervalMs);
+    return () => clearInterval(id);
+  }, [intervalMs, refresh]);
+
+  return { reports, refresh, loading, error };
+};
+
+export default useReports;
