@@ -94,8 +94,8 @@ const Analiticas = () => {
     labels: stats.topZonasRiesgo.map(z => z.zona),
     datasets: [
       {
-        label: 'Nivel de Riesgo',
-        data: stats.topZonasRiesgo.map(z => z.riesgo),
+        label: '# incidentes (últimos 30 días)',
+        data: stats.topZonasRiesgo.map(z => z.incidentes_30d),
         backgroundColor: [
           'rgba(255, 107, 107, 0.8)',
           'rgba(255, 170, 0, 0.8)',
@@ -161,7 +161,7 @@ const Analiticas = () => {
 
       <div className={styles.chartsGrid}>
         <div className={styles.chartCard}>
-          <h3 className={styles.chartTitle}>Top 5 Zonas por Nivel de Riesgo</h3>
+          <h3 className={styles.chartTitle}>Top 10 zonas por número de incidentes (últimos 30 días)</h3>
           <div className={styles.chartContainer}>
             <Bar data={barData} options={chartOptions} />
           </div>

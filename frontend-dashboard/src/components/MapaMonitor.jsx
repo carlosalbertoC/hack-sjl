@@ -12,8 +12,8 @@ L.Icon.Default.mergeOptions({
 });
 
 // Crear iconos personalizados según categoría
-const getIcon = (categoria) => {
-  const iconColor = categoria === 'ROBO' ? 'red' : categoria === 'ASALTO' ? 'orange' : 'blue';
+const getIcon = (prioridad) => {
+  const iconColor = prioridad === 'alta' ? 'red' : prioridad === 'media' ? 'orange' : 'blue';
   return L.divIcon({
     className: 'custom-marker',
     html: `<div style="
@@ -50,7 +50,7 @@ const MapaMonitor = ({ reportes }) => {
           <div key={reporte.id}>
             <Marker
               position={[reporte.lat, reporte.lng]}
-              icon={getIcon(reporte.categoria)}
+              icon={getIcon(reporte.prioridad)}
             />
             {reporte.enjambre && (
               <Circle

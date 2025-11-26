@@ -1,4 +1,22 @@
 import axios from 'axios';
+import { getCategory } from "./components/categories";
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.warn('Faltan REACT_APP_SUPABASE_URL o REACT_APP_SUPABASE_ANON_KEY');
+}
+
+const supabaseApi = axios.create({
+  baseURL: `${SUPABASE_URL}/rest/v1`,
+  timeout: 8000,
+  headers: {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+  },
+});
+
 
 // Configuración base de axios (simulada)
 const api = axios.create({
@@ -7,230 +25,6 @@ const api = axios.create({
 });
 
 // Datos mock para simulación
-
-// Mock: Reportes en vivo
-const mockLiveReports = [
-  {
-    id: 1,
-    categoria: 'ROBO',
-    descripcion: 'Asalto a transeúnte en intersección',
-    zona: 'Zárate',
-    lat: -11.9900,
-    lng: -77.0100,
-    timestamp: '14:35',
-    enjambre: true,
-    prioridad: 'alta'
-  },
-  {
-    id: 2,
-    categoria: 'VANDALISMO',
-    descripcion: 'Grafiti en paredes del parque',
-    zona: 'Canto Rey',
-    lat: -11.9850,
-    lng: -77.0150,
-    timestamp: '14:28',
-    enjambre: false,
-    prioridad: 'media'
-  },
-  {
-    id: 3,
-    categoria: 'ROBO',
-    descripcion: 'Robo de celular en paradero',
-    zona: 'Zárate',
-    lat: -11.9920,
-    lng: -77.0120,
-    timestamp: '14:20',
-    enjambre: true,
-    prioridad: 'alta'
-  },
-  {
-    id: 4,
-    categoria: 'ASALTO',
-    descripcion: 'Asalto a comercio',
-    zona: 'Mariscal Cáceres',
-    lat: -11.9880,
-    lng: -77.0080,
-    timestamp: '14:15',
-    enjambre: false,
-    prioridad: 'alta'
-  },
-  {
-    id: 5,
-    categoria: 'VANDALISMO',
-    descripcion: 'Destrucción de mobiliario urbano',
-    zona: 'Canto Rey',
-    lat: -11.9860,
-    lng: -77.0140,
-    timestamp: '14:10',
-    enjambre: false,
-    prioridad: 'baja'
-  },
-  {
-    id: 6,
-    categoria: 'ROBO',
-    descripcion: 'Robo de vehículo estacionado',
-    zona: 'Zárate',
-    lat: -11.9910,
-    lng: -77.0110,
-    timestamp: '14:05',
-    enjambre: true,
-    prioridad: 'alta'
-  },
-  {
-    id: 7,
-    categoria: 'ASALTO',
-    descripcion: 'Asalto a persona en vía pública',
-    zona: 'Mariscal Cáceres',
-    lat: -11.9870,
-    lng: -77.0090,
-    timestamp: '13:58',
-    enjambre: false,
-    prioridad: 'media'
-  },
-  {
-    id: 8,
-    categoria: 'VANDALISMO',
-    descripcion: 'Pintas en fachada de edificio',
-    zona: 'Canto Rey',
-    lat: -11.9840,
-    lng: -77.0160,
-    timestamp: '13:50',
-    enjambre: false,
-    prioridad: 'baja'
-  },
-  {
-    id: 9,
-    categoria: 'ROBO',
-    descripcion: 'Robo de billetera',
-    zona: 'Zárate',
-    lat: -11.9890,
-    lng: -77.0105,
-    timestamp: '13:45',
-    enjambre: true,
-    prioridad: 'alta'
-  },
-  {
-    id: 10,
-    categoria: 'ASALTO',
-    descripcion: 'Asalto a motociclista',
-    zona: 'Mariscal Cáceres',
-    lat: -11.9885,
-    lng: -77.0085,
-    timestamp: '13:40',
-    enjambre: false,
-    prioridad: 'alta'
-  },
-  {
-    id: 11,
-    categoria: 'ROBO',
-    descripcion: 'Robo de celular en transporte público',
-    zona: 'Zárate',
-    lat: -11.9905,
-    lng: -77.0115,
-    timestamp: '13:35',
-    enjambre: true,
-    prioridad: 'alta'
-  },
-  {
-    id: 12,
-    categoria: 'VANDALISMO',
-    descripcion: 'Rotura de semáforo',
-    zona: 'Canto Rey',
-    lat: -11.9855,
-    lng: -77.0155,
-    timestamp: '13:30',
-    enjambre: false,
-    prioridad: 'media'
-  },
-  {
-    id: 13,
-    categoria: 'ROBO',
-    descripcion: 'Robo de bicicleta',
-    zona: 'Zárate',
-    lat: -11.9915,
-    lng: -77.0125,
-    timestamp: '13:25',
-    enjambre: true,
-    prioridad: 'media'
-  },
-  {
-    id: 14,
-    categoria: 'ASALTO',
-    descripcion: 'Asalto a taxista',
-    zona: 'Mariscal Cáceres',
-    lat: -11.9875,
-    lng: -77.0095,
-    timestamp: '13:20',
-    enjambre: false,
-    prioridad: 'alta'
-  },
-  {
-    id: 15,
-    categoria: 'VANDALISMO',
-    descripcion: 'Grafiti en monumento',
-    zona: 'Canto Rey',
-    lat: -11.9845,
-    lng: -77.0165,
-    timestamp: '13:15',
-    enjambre: false,
-    prioridad: 'baja'
-  },
-  {
-    id: 16,
-    categoria: 'ROBO',
-    descripcion: 'Robo de cartera',
-    zona: 'Zárate',
-    lat: -11.9908,
-    lng: -77.0108,
-    timestamp: '13:10',
-    enjambre: true,
-    prioridad: 'alta'
-  },
-  {
-    id: 17,
-    categoria: 'ASALTO',
-    descripcion: 'Asalto a peatón',
-    zona: 'Mariscal Cáceres',
-    lat: -11.9882,
-    lng: -77.0082,
-    timestamp: '13:05',
-    enjambre: false,
-    prioridad: 'media'
-  },
-  {
-    id: 18,
-    categoria: 'ROBO',
-    descripcion: 'Robo de mochila',
-    zona: 'Zárate',
-    lat: -11.9912,
-    lng: -77.0112,
-    timestamp: '13:00',
-    enjambre: true,
-    prioridad: 'alta'
-  },
-  {
-    id: 19,
-    categoria: 'VANDALISMO',
-    descripcion: 'Destrucción de señalética',
-    zona: 'Canto Rey',
-    lat: -11.9858,
-    lng: -77.0158,
-    timestamp: '12:55',
-    enjambre: false,
-    prioridad: 'baja'
-  },
-  {
-    id: 20,
-    categoria: 'ASALTO',
-    descripcion: 'Asalto a comerciante',
-    zona: 'Mariscal Cáceres',
-    lat: -11.9878,
-    lng: -77.0098,
-    timestamp: '12:50',
-    enjambre: false,
-    prioridad: 'alta'
-  }
-];
 
 // Mock: Directivas por turno
 const mockDirectivas = {
@@ -323,113 +117,210 @@ const mockDirectivas = {
   ]
 };
 
-// Mock: Matriz de riesgos
-const mockMatrizRiesgos = [
-  {
-    id: 1,
-    prioridad: 'ALTA',
-    problema: 'Poste sin luz en intersección principal',
-    ubicacion: 'Av. Zárate con Jr. Los Olivos',
-    delitos_asociados: '18 Robos',
-    jurisdiccion: 'CPNP Canto Rey',
-    estado: 'Pendiente'
-  },
-  {
-    id: 2,
-    prioridad: 'MEDIA',
-    problema: 'Semáforo dañado',
-    ubicacion: 'Av. Mariscal Cáceres km 8.5',
-    delitos_asociados: '5 Asaltos',
-    jurisdiccion: 'CPNP Zárate',
-    estado: 'En proceso'
-  },
-  {
-    id: 3,
-    prioridad: 'ALTA',
-    problema: 'Cámaras de seguridad fuera de servicio',
-    ubicacion: 'Parque Canto Rey',
-    delitos_asociados: '12 Vandalismo',
-    jurisdiccion: 'CPNP Canto Rey',
-    estado: 'Pendiente'
-  },
-  {
-    id: 4,
-    prioridad: 'MEDIA',
-    problema: 'Mobiliario urbano destruido',
-    ubicacion: 'Plaza Zárate',
-    delitos_asociados: '8 Vandalismo',
-    jurisdiccion: 'CPNP Zárate',
-    estado: 'Resuelto'
-  },
-  {
-    id: 5,
-    prioridad: 'ALTA',
-    problema: 'Alumbrado público insuficiente',
-    ubicacion: 'Jr. Los Olivos cuadras 5-10',
-    delitos_asociados: '15 Robos',
-    jurisdiccion: 'CPNP Canto Rey',
-    estado: 'Pendiente'
-  },
-  {
-    id: 6,
-    prioridad: 'MEDIA',
-    problema: 'Baches en vía principal',
-    ubicacion: 'Av. Mariscal Cáceres km 7-9',
-    delitos_asociados: '3 Asaltos',
-    jurisdiccion: 'CPNP Zárate',
-    estado: 'En proceso'
-  },
-  {
-    id: 7,
-    prioridad: 'ALTA',
-    problema: 'Cámaras vandalizadas',
-    ubicacion: 'Av. Zárate intersección con Av. Canto Rey',
-    delitos_asociados: '20 Robos',
-    jurisdiccion: 'CPNP Canto Rey',
-    estado: 'Pendiente'
-  },
-  {
-    id: 8,
-    prioridad: 'MEDIA',
-    problema: 'Señalética dañada',
-    ubicacion: 'Zona escolar Canto Rey',
-    delitos_asociados: '6 Vandalismo',
-    jurisdiccion: 'CPNP Canto Rey',
-    estado: 'Resuelto'
-  }
-];
+const mapDbReportToLive = (r) => {
+  let prioridad = "media";
+  if (r.urgency === 3) prioridad = "alta";
+  if (r.urgency === 1) prioridad = "baja";
 
-// Mock: Estadísticas para gráficos
-const mockStats = {
-  topZonasRiesgo: [
-    { zona: 'Zárate', riesgo: 9.2 },
-    { zona: 'Mariscal Cáceres', riesgo: 8.5 },
-    { zona: 'Canto Rey', riesgo: 6.8 },
-    { zona: 'San Juan', riesgo: 5.3 },
-    { zona: 'El Progreso', riesgo: 4.1 }
-  ],
-  reportesPorCategoria: [
-    { categoria: 'ROBO', cantidad: 45 },
-    { categoria: 'ASALTO', cantidad: 28 },
-    { categoria: 'VANDALISMO', cantidad: 32 },
-    { categoria: 'OTROS', cantidad: 15 }
-  ],
-  incidentesUltimos7Dias: [
-    { dia: 'Lun', cantidad: 18 },
-    { dia: 'Mar', cantidad: 22 },
-    { dia: 'Mié', cantidad: 15 },
-    { dia: 'Jue', cantidad: 28 },
-    { dia: 'Vie', cantidad: 35 },
-    { dia: 'Sáb', cantidad: 42 },
-    { dia: 'Dom', cantidad: 30 }
-  ]
+  return {
+    id: r.id,
+    categoria: (r.category || "OTROS").toUpperCase(),
+    descripcion: r.comment || "Sin descripción",
+    zona: r.address || "Zona no especificada",
+    lat: r.lat,
+    lng: r.lng,
+
+    // 👉 MUY IMPORTANTE: conservar fecha original
+    created_at: r.created_at,
+
+    // Opcional: si quieres un campo de hora para mostrar en otros lados
+    timestamp: r.created_at
+      ? new Date(r.created_at).toLocaleTimeString("es-PE", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "",
+
+    enjambre: false,
+    prioridad,
+  };
 };
 
 // Funciones de API (simuladas con datos mock)
 export const fetchLiveReports = async () => {
   // Simular delay de red
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return { data: mockLiveReports };
+  const now = new Date();
+  const from = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  const { data } = await supabaseApi.get('/reports', {
+    params: {
+      select: 'id,lat,lng,category,comment,address,created_at,urgency',
+      order: 'created_at.desc',
+      created_at: `gte.${from}`,
+      limit: 200,
+    },
+  });
+
+  const adaptados = (data || []).map(mapDbReportToLive);
+  return { data: adaptados };
+};
+
+const CELL_LAT = 0.0025;
+const CELL_LNG = 0.0025;
+
+const getCellKey = (lat, lng) => {
+  const cellX = Math.floor(lat / CELL_LAT);
+  const cellY = Math.floor(lng / CELL_LNG);
+  return `${cellX}|${cellY}`;
+};
+
+const getHourFromReport = (r) => {
+  if (!r.created_at) return null;
+  const d = new Date(r.created_at);
+  if (isNaN(d.getTime())) return null;
+  return d.getHours(); // 0..23
+};
+
+const getFranjaFromHour = (h) => {
+  if (h === null || h === undefined) return null;
+  if (h >= 0 && h < 6) return "madrugada";
+  if (h >= 6 && h < 12) return "mañana";
+  if (h >= 12 && h < 18) return "tarde";
+  return "noche";
+};
+
+const getDominantKey = (counts) => {
+  let bestKey = null;
+  let bestValue = 0;
+  for (const [key, value] of Object.entries(counts)) {
+    if (value > bestValue) {
+      bestValue = value;
+      bestKey = key;
+    }
+  }
+  return bestKey;
+};
+
+// 🔧 Construye las zonas críticas a partir de los reportes ya filtrados a 30 días
+const buildCriticalZonesFromReports = (reports) => {
+  const groups = new Map();
+
+  for (const r of reports) {
+    const lat = Number(r.lat);
+    const lng = Number(r.lng);
+    if (isNaN(lat) || isNaN(lng)) continue;
+
+    const key = getCellKey(lat, lng);
+    if (!groups.has(key)) {
+      groups.set(key, {
+        key,
+        reports: [],
+        sumLat: 0,
+        sumLng: 0,
+        count: 0,
+        typeCounts: {
+          delito: 0,
+          conducta_sospechosa: 0,
+          riesgo_entorno: 0,
+        },
+        franjaCounts: {
+          madrugada: 0,
+          mañana: 0,
+          tarde: 0,
+          noche: 0,
+        },
+      });
+    }
+
+    const g = groups.get(key);
+    g.reports.push(r);
+    g.sumLat += lat;
+    g.sumLng += lng;
+    g.count += 1;
+
+    // categoria → type_general
+    const rawCat =
+      (r.category && r.category.toString().toLowerCase()) ||
+      (r.categoria && r.categoria.toString().toLowerCase()) ||
+      "";
+    const cat = getCategory(rawCat);
+    if (cat && cat.type_general && g.typeCounts[cat.type_general] !== undefined) {
+      g.typeCounts[cat.type_general] += 1;
+    }
+
+    // franja horaria
+    const h = getHourFromReport(r);
+    const franja = getFranjaFromHour(h);
+    if (franja && g.franjaCounts[franja] !== undefined) {
+      g.franjaCounts[franja] += 1;
+    }
+  }
+
+  // Pasamos de Map → array y calculamos centroides
+  const cells = Array.from(groups.values()).map((g) => {
+    const centroidLat = g.sumLat / g.count;
+    const centroidLng = g.sumLng / g.count;
+
+    const dominantType = getDominantKey(g.typeCounts) || "delito";
+    const dominantFranja = getDominantKey(g.franjaCounts) || "tarde";
+
+    return {
+      key: g.key,
+      count: g.count,
+      centroidLat,
+      centroidLng,
+      dominantType,
+      dominantFranja,
+    };
+  });
+
+  // Ordenamos por número de incidentes
+  cells.sort((a, b) => b.count - a.count);
+
+  // Asignar prioridad según ranking:
+  // top 10 → ALTA, siguientes 10 → MEDIA, resto → BAJA
+  cells.forEach((cell, idx) => {
+    let prioridad = "BAJA";
+    if (idx < 10) prioridad = "ALTA";
+    else if (idx < 20) prioridad = "MEDIA";
+    cell.prioridad = prioridad;
+  });
+
+  // Construimos el shape final para la tabla
+  const zonas = cells.map((cell, idx) => ({
+    id: cell.key,
+    prioridad: cell.prioridad, // ALTA / MEDIA / BAJA
+    // 👇 estos dos son súper importantes para el front
+    centroidLat: cell.centroidLat,
+    centroidLng: cell.centroidLng,
+
+    zona: `Zona ${idx + 1}`, // nombre corto, la dirección la resuelve el front
+    tipo_delito_dominante:
+      cell.dominantType === "delito"
+        ? "Delitos / incidentes"
+        : cell.dominantType === "conducta_sospechosa"
+        ? "Conducta sospechosa"
+        : "Riesgos del entorno",
+    incidentes_30d: cell.count,
+    franja_frecuente: cell.dominantFranja,
+    jurisdiccion: "Por definir",
+    estado: "Pendiente",
+  }));
+
+  return zonas;
+};
+
+// 🚀 Nueva versión de fetchMatrizRiesgos usando los reportes reales
+export const fetchMatrizRiesgos = async () => {
+  // 1) Traemos reportes de los últimos 30 días
+  const { data: reports } = await fetchLiveReports();
+
+  // 2) Construimos zonas críticas
+  const zonas = buildCriticalZonesFromReports(reports);
+
+  // 3) Simulamos delay (opcional) y devolvemos
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  return { data: zonas };
 };
 
 export const fetchDirectivas = async (turno) => {
@@ -438,14 +329,127 @@ export const fetchDirectivas = async (turno) => {
   return { data: directivas };
 };
 
-export const fetchMatrizRiesgos = async () => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return { data: mockMatrizRiesgos };
+// Tamaño de la celda en grados (ajusta si en GestorRiesgos usaste otro)
+const CELL_SIZE_DEG = 0.01; // ~1.1 km en latitud
+
+const getCellCenter = (cellKey) => {
+  const [latStr, lngStr] = cellKey.split(',');
+  const lat = parseFloat(latStr);
+  const lng = parseFloat(lngStr);
+  return {
+    latCenter: lat + CELL_SIZE_DEG / 2,
+    lngCenter: lng + CELL_SIZE_DEG / 2,
+  };
 };
 
 export const fetchStats = async () => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return { data: mockStats };
+  const now = new Date();
+  const from30 = new Date(
+    now.getTime() - 30 * 24 * 60 * 60 * 1000
+  ).toISOString();
+
+  const { data } = await supabaseApi.get('/reports', {
+    params: {
+      select: 'id,lat,lng,category,created_at',
+      order: 'created_at.desc',
+      created_at: `gte.${from30}`,
+      limit: 1000,
+    },
+  });
+
+  const reports = (data || []).filter(
+    (r) => r.lat != null && r.lng != null
+  );
+
+  // 1) Top zonas por nivel de riesgo (agrupando por celda)
+  const zonasMap = new Map();
+
+  for (const r of reports) {
+    const cellKey = getCellKey(r.lat, r.lng);
+    const existing = zonasMap.get(cellKey) || {
+      cellKey,
+      conteo: 0,
+      categorias: {}, // para tipo de delito dominante si luego quieres
+    };
+
+    existing.conteo += 1;
+
+    const cat = (r.category || 'OTROS').toUpperCase();
+    existing.categorias[cat] = (existing.categorias[cat] || 0) + 1;
+
+    zonasMap.set(cellKey, existing);
+  }
+
+  let topZonasRiesgo = Array.from(zonasMap.values())
+    .sort((a, b) => b.conteo - a.conteo)
+    .slice(0, 10)
+    .map((cell, idx) => {
+      const { latCenter, lngCenter } = getCellCenter(cell.cellKey);
+
+      const [catDominante] =
+        Object.entries(cell.categorias).sort((a, b) => b[1] - a[1])[0] || ['OTROS', 0];
+
+      return {
+        id: idx + 1,
+        zona: `Zona aprox. (${latCenter.toFixed(4)}, ${lngCenter.toFixed(4)})`,
+        incidentes_30d: cell.conteo,          // ✅ número de incidentes en esa celda
+        tipo_delito_dominante: catDominante,  // por si quieres usarlo en algún otro lado
+      };
+    });
+
+  // 2) Reportes por categoría (para el Pie)
+  const catMap = new Map();
+  for (const r of reports) {
+    const cat = (r.category || 'OTROS').toUpperCase();
+    const current = catMap.get(cat) || { categoria: cat, cantidad: 0 };
+    current.cantidad += 1;
+    catMap.set(cat, current);
+  }
+
+  const reportesPorCategoria = Array.from(catMap.values()).sort(
+    (a, b) => b.cantidad - a.cantidad
+  );
+
+  // 3) Incidentes últimos 7 días (para la línea)
+  const from7 = new Date(
+    now.getTime() - 6 * 24 * 60 * 60 * 1000
+  ); // hoy-6 → hoy (7 días)
+
+  const countsByDay = new Map();
+
+  // inicializar los 7 días
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(from7.getTime() + i * 24 * 60 * 60 * 1000);
+    const key = d.toISOString().slice(0, 10); // YYYY-MM-DD
+    countsByDay.set(key, {
+      dia: d.toLocaleDateString('es-PE', {
+        weekday: 'short',
+        day: '2-digit',
+      }),
+      cantidad: 0,
+    });
+  }
+
+  for (const r of reports) {
+    if (!r.created_at) continue;
+    const d = new Date(r.created_at);
+    const key = d.toISOString().slice(0, 10);
+    if (countsByDay.has(key)) {
+      countsByDay.get(key).cantidad += 1;
+    }
+  }
+
+  const incidentesUltimos7Dias = Array.from(countsByDay.entries())
+    .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+    .map(([, v]) => v);
+
+  return {
+    data: {
+      topZonasRiesgo,
+      reportesPorCategoria,
+      incidentesUltimos7Dias,
+    },
+  };
 };
 
 export default api;

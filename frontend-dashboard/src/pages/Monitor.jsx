@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import MapaMonitor from '../components/MapaMonitor.jsx';
 import FeedVivo from '../components/FeedVivo.jsx';
 import { fetchLiveReports } from '../api';
 import styles from './Monitor.module.css';
+import MapaMonitorGoogle from '../components/MapaMonitorGoogle.jsx';
 
 const Monitor = () => {
   const [reportes, setReportes] = useState([]);
@@ -43,7 +43,7 @@ const Monitor = () => {
       <div className={styles.content}>
         <section className={styles.mapSection}>
           <p className={styles.sectionTitle}>Situación Geoespacial</p>
-          <MapaMonitor reportes={reportes} />
+          <MapaMonitorGoogle reportes={reportes} />
         </section>
         <section className={styles.feedSection}>
           <p className={styles.sectionTitle}>Mensajes Prioritarios</p>

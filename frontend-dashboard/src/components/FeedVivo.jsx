@@ -4,9 +4,9 @@ const FeedVivo = ({ reportes }) => {
   const enjambres = reportes.filter(r => r.enjambre);
   const reportesRegulares = reportes.slice(0, 20).reverse(); // Últimos 20, más nuevo arriba
 
-  const getIcono = (categoria) => {
-    if (categoria === 'ROBO') return '🔴';
-    if (categoria === 'ASALTO') return '🟡';
+  const getIcono = (prioridad) => {
+    if (prioridad === 'alta') return '🔴';
+    if (prioridad === 'media') return '🟡';
     return '🔵';
   };
 
@@ -38,7 +38,7 @@ const FeedVivo = ({ reportes }) => {
           {reportesRegulares.map((reporte) => (
             <li key={reporte.id} className={styles.feedItem}>
               <div className={styles.feedItemHeader}>
-                <span className={styles.feedIcon}>{getIcono(reporte.categoria)}</span>
+                <span className={styles.feedIcon}>{getIcono(reporte.prioridad)}</span>
                 <span className={styles.feedTime}>{reporte.timestamp}</span>
                 <span className={styles.feedCategoria}>{reporte.categoria}</span>
                 <span className={styles.feedZona}>{reporte.zona}</span>
