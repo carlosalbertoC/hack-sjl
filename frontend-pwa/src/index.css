@@ -1,11 +1,18 @@
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
   font-family: 'Arial', sans-serif;
 }
+
 button, textarea {
   font-family: inherit;
+}
+
+.app-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 .topbar-logo-wrapper img {
@@ -35,4 +42,9 @@ button, textarea {
     height: 28px;
     width: auto;
   }
+
+  .app-root {
+    padding-bottom: 55px;
+  }
 }
+

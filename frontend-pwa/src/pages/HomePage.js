@@ -97,7 +97,7 @@ const TopBar = ({ selectedWindow, onSelectWindow, onSearchAddress, categoryFilte
           <div className="topbar-logo-wrapper">
             <img
               src={appLogo}
-              alt="Logo de la app"
+              alt="Barrio Alerta"
               style={{
                 height: 70,
                 width: "auto",
@@ -437,12 +437,11 @@ const HomePage = () => {
 
   return (
     <div
+      className="app-root"
       style={{
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
         width: "100vw",
-        overflow: "hidden",
       }}
     >
       {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
